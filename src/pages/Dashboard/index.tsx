@@ -19,6 +19,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import React, { useContext, useState } from 'react';
 
+// API
+
 // Context
 import { Context as CurrentMachineContext } from '../../context/CurrentMachineContext';
 
@@ -27,6 +29,7 @@ import { useFecth } from '../../hooks/useFetch';
 
 // Components
 import Card from '../../components/Card';
+import Loading from '../../components/Loading';
 import Table from '../../components/Table';
 
 const Dashboard: React.FC = () => {
@@ -35,13 +38,18 @@ const Dashboard: React.FC = () => {
 
   const [page, setPage] = useState(1);
 
-  const { data } = useFecth(`/reports/${currentMachine?.id}?page=${page}`, {
-    refreshInterval: 10000,
-    errorRetryInterval: 10000,
-  });
+  let { data: lastData } = useFecth(
+    currentMachine?.id ? `/reports/${currentMachine?.id}?page=${1}` : null,
+    {
+      refreshInterval: 10000,
+      errorRetryInterval: 10000,
+    }
+  );
 
-  const { data: lastData } = useFecth(
-    `/reports/${currentMachine?.id}?page=${1}`,
+  lastData = lastData?.reports[0];
+
+  const { data: data, isLoading } = useFecth(
+    currentMachine?.id ? `/reports/${currentMachine?.id}?page=${page}` : null,
     {
       refreshInterval: 10000,
       errorRetryInterval: 10000,
@@ -50,13 +58,9 @@ const Dashboard: React.FC = () => {
 
   if (!currentMachine) return <></>;
 
-  if (!data) return <></>;
-
-  if (!lastData) return <></>;
-
   return (
     <>
-      {data.reports && data.reports.length > 0 && (
+      {lastData && (
         <>
           <Grid
             sx={{ background: theme.palette.common.white }}
@@ -71,14 +75,11 @@ const Dashboard: React.FC = () => {
                 {' '}
                 <Typography color="text.primary">
                   Última Atualização:{' '}
-                  {formatDistanceToNow(
-                    new Date(lastData.reports[0].createdAt),
-                    {
-                      locale: ptBR,
-                      addSuffix: true,
-                      includeSeconds: true,
-                    }
-                  )}
+                  {formatDistanceToNow(new Date(lastData.createdAt), {
+                    locale: ptBR,
+                    addSuffix: true,
+                    includeSeconds: true,
+                  })}
                 </Typography>
               </Breadcrumbs>
             </Grid>
@@ -104,7 +105,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="secondary" variant="h3">
-                      {lastData.reports[0].temperature}
+                      {lastData.temperature}
                     </Typography>
                     <Typography color="secondary" variant="h6">
                       {' '}
@@ -138,7 +139,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="primary.light" variant="h3">
-                      {lastData.reports[0].humidity}
+                      {lastData.humidity}
                     </Typography>
                     <Typography color="primary.light" variant="h6">
                       {' '}
@@ -170,7 +171,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color={theme.palette.warning.main} variant="h3">
-                      {lastData.reports[0].pressure}
+                      {lastData.pressure}
                     </Typography>
                     <Typography color={theme.palette.warning.main} variant="h6">
                       {' '}
@@ -202,7 +203,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="primary" variant="h3">
-                      {lastData.reports[0].rain}
+                      {lastData.rain}
                     </Typography>
                     <Typography color="primary" variant="h6">
                       {' '}
@@ -221,7 +222,6 @@ const Dashboard: React.FC = () => {
             paddingX={2}
             justifyContent="center"
           >
-            {/* Item */}
             <Grid item xs>
               <Card
                 IconArea={
@@ -247,7 +247,7 @@ const Dashboard: React.FC = () => {
                       color={theme.palette.warning.light}
                       variant="h3"
                     >
-                      {lastData.reports[0].solarRadiation}
+                      {lastData.solarRadiation}
                     </Typography>
                     <Typography
                       color={theme.palette.warning.light}
@@ -287,7 +287,7 @@ const Dashboard: React.FC = () => {
                       color={theme.palette.success.light}
                       variant="h3"
                     >
-                      {lastData.reports[0].windVelocity}
+                      {lastData.windVelocity}
                     </Typography>
                     <Typography
                       color={theme.palette.success.light}
@@ -330,39 +330,51 @@ const Dashboard: React.FC = () => {
                       color={theme.palette.secondary.light}
                       variant="h3"
                     >
-                      {lastData.reports[0].windDirection}
+                      {lastData.windDirection}
                     </Typography>
                   </Box>
                 }
               />
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sx={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-              }}
-            >
-              <Pagination
-                color="primary"
-                count={data.totalPages}
-                page={page}
-                onChange={(_, pageSelected) => setPage(pageSelected)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Table
-                autoHeight
-                rows={data.reports || []}
-                hideFooterPagination
-                hideFooter
-              />
-            </Grid>
           </Grid>
         </>
       )}
+      {data && data.reports && data.reports.length > 0 && (
+        <Grid
+          sx={{ background: theme.palette.common.white }}
+          container
+          spacing={2}
+          padding={1}
+          paddingX={2}
+          justifyContent="center"
+        >
+          <Grid
+            item
+            xs={12}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <Pagination
+              color="primary"
+              count={data.totalPages}
+              page={page}
+              onChange={(_, pageSelected) => setPage(pageSelected)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Table
+              autoHeight
+              rows={data.reports || []}
+              hideFooterPagination
+              hideFooter
+            />
+          </Grid>
+        </Grid>
+      )}
+      <Loading open={isLoading} />
     </>
   );
 };

@@ -2,7 +2,7 @@ import useSWR, { SWRConfiguration } from 'swr';
 import api from '../services/api';
 
 export function useFecth<Data = any, Error = any>(
-  url: string,
+  url: string | null,
   options: SWRConfiguration = {}
 ) {
   const { data, error, mutate, isLoading } = useSWR<Data, Error>(

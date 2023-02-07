@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useTheme } from '@mui/material/styles';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 // Hooks
 import { useFecth } from '../../hooks/useFetch';
@@ -36,6 +36,7 @@ import NewMachineDialog from '../NewMachineDialog';
 import Logo from '../../assets/logo.svg';
 
 const Header: React.FC = () => {
+  const paramMachineId = window.location.pathname.replace('/', '');
   const [createDialogIsOpen, setIsCreateDialogOpen] = useState(false);
   const [newMachineDialogIsOpen, setIsNewMachineDialogOpen] = useState(false);
   const [idCreated, setIdCreated] = useState('');
@@ -75,6 +76,14 @@ const Header: React.FC = () => {
     },
     [data, mutate]
   );
+
+  useEffect(() => {
+    if (data && paramMachineId && setCurrentMachine) {
+      const selectedMachine = data.find(m => m.id === paramMachineId);
+      if (selectedMachine) setCurrentMachine(selectedMachine);
+      else window.alert('Equipamento não encontrado.');
+    }
+  }, [data, paramMachineId, setCurrentMachine]);
 
   return (
     <AppBar
