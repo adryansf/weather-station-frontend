@@ -8,38 +8,28 @@ import { ptBR } from 'date-fns/locale';
 const columns: GridColDef[] = [
   {
     field: 'temperature',
-    headerName: 'Temperatura',
-    width: 100,
+    headerName: 'Temperatura (ºC)',
+    width: 130,
   },
   {
     field: 'humidity',
-    headerName: 'Umidade',
+    headerName: 'Umidade (%)',
     width: 100,
   },
   {
     field: 'pressure',
-    headerName: 'Pressão',
-    width: 100,
+    headerName: 'Pressão (hPa)',
+    width: 110,
   },
   {
     field: 'rain',
-    headerName: 'Chuva',
+    headerName: 'Chuva (%)',
     width: 100,
   },
   {
-    field: 'solarRadiation',
-    headerName: 'Radiação Solar',
-    width: 150,
-  },
-  {
     field: 'windVelocity',
-    headerName: 'Velocidade do Vento',
-    width: 150,
-  },
-  {
-    field: 'windDirection',
-    headerName: 'Direção do Vento',
-    width: 150,
+    headerName: 'Velocidade do Vento (Km/h)',
+    width: 200,
   },
   {
     field: 'createdAt',

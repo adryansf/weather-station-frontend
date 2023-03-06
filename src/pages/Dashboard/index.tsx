@@ -2,10 +2,8 @@ import {
   Air as AirIcon,
   Cloud as CloudIcon,
   Opacity as OpacityIcon,
-  OpenWith as OpenWithIcon,
   Thermostat as ThermostatIcon,
   TireRepair as PressureIcon,
-  WbSunny as WbSunnyIcon,
 } from '@mui/icons-material';
 import {
   Box,
@@ -175,7 +173,7 @@ const Dashboard: React.FC = () => {
                     </Typography>
                     <Typography color={theme.palette.warning.main} variant="h6">
                       {' '}
-                      atm
+                      hPa
                     </Typography>
                   </Box>
                 }
@@ -213,55 +211,6 @@ const Dashboard: React.FC = () => {
                 }
               />
             </Grid>
-          </Grid>
-          <Grid
-            sx={{ background: theme.palette.common.white }}
-            container
-            spacing={2}
-            padding={1}
-            paddingX={2}
-            justifyContent="center"
-          >
-            <Grid item xs>
-              <Card
-                IconArea={
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <WbSunnyIcon
-                      sx={{ fontSize: 100, color: theme.palette.warning.light }}
-                    />
-                    <Typography variant="overline" textAlign="center">
-                      Radiação Solar
-                    </Typography>
-                  </Box>
-                }
-                value={
-                  <Box display="flex">
-                    <Typography
-                      color={theme.palette.warning.light}
-                      variant="h3"
-                    >
-                      {lastData.solarRadiation}
-                    </Typography>
-                    <Typography
-                      color={theme.palette.warning.light}
-                      variant="body1"
-                    >
-                      {' '}
-                      W/m²
-                    </Typography>
-                  </Box>
-                }
-              />
-            </Grid>
-
-            {/* Item */}
             <Grid item xs>
               <Card
                 IconArea={
@@ -295,42 +244,6 @@ const Dashboard: React.FC = () => {
                     >
                       {' '}
                       Km/h
-                    </Typography>
-                  </Box>
-                }
-              />
-            </Grid>
-
-            {/* Item */}
-            <Grid item xs>
-              <Card
-                IconArea={
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <OpenWithIcon
-                      sx={{
-                        fontSize: 100,
-                        color: theme.palette.secondary.light,
-                      }}
-                    />
-                    <Typography variant="overline" textAlign="center">
-                      Direção do Vento
-                    </Typography>
-                  </Box>
-                }
-                value={
-                  <Box display="flex">
-                    <Typography
-                      color={theme.palette.secondary.light}
-                      variant="h3"
-                    >
-                      {lastData.windDirection}
                     </Typography>
                   </Box>
                 }
