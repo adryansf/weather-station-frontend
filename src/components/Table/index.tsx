@@ -23,7 +23,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'rain',
-    headerName: 'Chuva (%)',
+    headerName: 'Chuva (mm²)',
     width: 100,
   },
   {

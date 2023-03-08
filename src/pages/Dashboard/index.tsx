@@ -1,19 +1,31 @@
 import {
   Air as AirIcon,
+  ChevronLeft as ArrowLeftIcon,
+  ChevronRight as ArrowRightIcon,
   Cloud as CloudIcon,
   Opacity as OpacityIcon,
   Thermostat as ThermostatIcon,
   TireRepair as PressureIcon,
+  Today as TodayIcon,
 } from '@mui/icons-material';
 import {
   Box,
   Breadcrumbs,
+  Divider,
   Grid,
+  IconButton,
   Pagination,
+  Skeleton,
   Typography,
   useTheme,
 } from '@mui/material';
-import { formatDistanceToNow } from 'date-fns';
+import {
+  addDays,
+  format,
+  formatDistanceToNow,
+  isFuture,
+  subDays,
+} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import React, { useContext, useState } from 'react';
 
@@ -35,16 +47,13 @@ const Dashboard: React.FC = () => {
   const { currentMachine } = useContext(CurrentMachineContext);
 
   const [page, setPage] = useState(1);
+  const [date, setDate] = useState(new Date());
 
-  let { data: lastData } = useFecth(
-    currentMachine?.id ? `/reports/${currentMachine?.id}?page=${1}` : null,
-    {
-      refreshInterval: 10000,
-      errorRetryInterval: 10000,
-    }
+  let { data: dayData, isLoading: isLoadingDay } = useFecth(
+    currentMachine?.id
+      ? `/day/${currentMachine?.id}?day=${format(date, 'MM-dd-yyyy')}`
+      : null
   );
-
-  lastData = lastData?.reports[0];
 
   const { data: data, isLoading } = useFecth(
     currentMachine?.id ? `/reports/${currentMachine?.id}?page=${page}` : null,
@@ -58,7 +67,20 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      {lastData && (
+      {!dayData && (
+        <Box
+          sx={{ background: theme.palette.common.white, margin: 0 }}
+          display="flex"
+          flexDirection="column"
+        >
+          <Skeleton animation="wave" sx={{ margin: 2 }} />
+          <Skeleton animation="wave" sx={{ margin: 2 }} />
+          <Skeleton animation="wave" sx={{ margin: 2 }} />
+          <Skeleton animation="wave" sx={{ margin: 2 }} />
+          <Skeleton animation="wave" sx={{ margin: 2 }} />
+        </Box>
+      )}
+      {dayData && (
         <>
           <Grid
             sx={{ background: theme.palette.common.white }}
@@ -68,18 +90,48 @@ const Dashboard: React.FC = () => {
             paddingX={2}
             justifyContent="center"
           >
-            <Grid item xs={12}>
-              <Breadcrumbs>
-                {' '}
-                <Typography color="text.primary">
-                  Última Atualização:{' '}
-                  {formatDistanceToNow(new Date(lastData.createdAt), {
-                    locale: ptBR,
-                    addSuffix: true,
-                    includeSeconds: true,
-                  })}
-                </Typography>
-              </Breadcrumbs>
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Typography variant="h5" fontWeight="bold">
+                Resumo do dia
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <IconButton
+                onClick={() => setDate(subDays(date, 1))}
+                sx={{ marginX: 2 }}
+              >
+                <ArrowLeftIcon fontSize="large" />
+              </IconButton>
+
+              <Typography component="p" variant="h6">
+                {format(date, 'PPPP', { locale: ptBR })}
+              </Typography>
+              <IconButton
+                sx={{ marginX: 2 }}
+                onClick={() => {
+                  if (!isFuture(addDays(date, 1))) setDate(addDays(date, 1));
+                }}
+              >
+                <ArrowRightIcon fontSize="large" />
+              </IconButton>
+              <IconButton
+                onClick={() => setDate(new Date())}
+                sx={{ marginX: 2 }}
+              >
+                <TodayIcon fontSize="large" />
+              </IconButton>
             </Grid>
 
             {/* Item */}
@@ -103,7 +155,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="secondary" variant="h3">
-                      {lastData.temperature}
+                      {dayData.temperature}
                     </Typography>
                     <Typography color="secondary" variant="h6">
                       {' '}
@@ -137,7 +189,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="primary.light" variant="h3">
-                      {lastData.humidity}
+                      {dayData.humidity}
                     </Typography>
                     <Typography color="primary.light" variant="h6">
                       {' '}
@@ -169,7 +221,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color={theme.palette.warning.main} variant="h3">
-                      {lastData.pressure}
+                      {dayData.pressure}
                     </Typography>
                     <Typography color={theme.palette.warning.main} variant="h6">
                       {' '}
@@ -201,11 +253,11 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="primary" variant="h3">
-                      {lastData.rain}
+                      {dayData.rain}
                     </Typography>
                     <Typography color="primary" variant="h6">
                       {' '}
-                      %
+                      mm²
                     </Typography>
                   </Box>
                 }
@@ -236,7 +288,7 @@ const Dashboard: React.FC = () => {
                       color={theme.palette.success.light}
                       variant="h3"
                     >
-                      {lastData.windVelocity}
+                      {dayData.windVelocity}
                     </Typography>
                     <Typography
                       color={theme.palette.success.light}
@@ -252,6 +304,7 @@ const Dashboard: React.FC = () => {
           </Grid>
         </>
       )}
+
       {data && data.reports && data.reports.length > 0 && (
         <Grid
           sx={{ background: theme.palette.common.white }}
@@ -261,6 +314,22 @@ const Dashboard: React.FC = () => {
           paddingX={2}
           justifyContent="center"
         >
+          <Grid item xs={12} sx={{ marginTop: 5 }}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12}>
+            <Breadcrumbs>
+              {' '}
+              <Typography color="text.primary">
+                Última Atualização:{' '}
+                {formatDistanceToNow(new Date(data.reports[0].createdAt), {
+                  locale: ptBR,
+                  addSuffix: true,
+                  includeSeconds: true,
+                })}
+              </Typography>
+            </Breadcrumbs>
+          </Grid>
           <Grid
             item
             xs={12}
@@ -287,7 +356,7 @@ const Dashboard: React.FC = () => {
           </Grid>
         </Grid>
       )}
-      <Loading open={isLoading} />
+      <Loading open={isLoading || isLoadingDay} />
     </>
   );
 };
