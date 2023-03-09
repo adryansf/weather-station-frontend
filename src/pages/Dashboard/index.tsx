@@ -155,7 +155,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="secondary" variant="h3">
-                      {dayData.temperature}
+                      {Number(dayData.temperature).toFixed(2)}
                     </Typography>
                     <Typography color="secondary" variant="h6">
                       {' '}
@@ -189,7 +189,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="primary.light" variant="h3">
-                      {dayData.humidity}
+                      {Number(dayData.humidity).toFixed(2)}
                     </Typography>
                     <Typography color="primary.light" variant="h6">
                       {' '}
@@ -221,7 +221,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color={theme.palette.warning.main} variant="h3">
-                      {dayData.pressure}
+                      {Number(dayData.pressure).toFixed(2)}
                     </Typography>
                     <Typography color={theme.palette.warning.main} variant="h6">
                       {' '}
@@ -253,7 +253,7 @@ const Dashboard: React.FC = () => {
                 value={
                   <Box display="flex">
                     <Typography color="primary" variant="h3">
-                      {dayData.rain}
+                      {Number(dayData.rain).toFixed(2)}
                     </Typography>
                     <Typography color="primary" variant="h6">
                       {' '}
@@ -288,7 +288,7 @@ const Dashboard: React.FC = () => {
                       color={theme.palette.success.light}
                       variant="h3"
                     >
-                      {dayData.windVelocity}
+                      {Number(dayData.windVelocity).toFixed(2)}
                     </Typography>
                     <Typography
                       color={theme.palette.success.light}
