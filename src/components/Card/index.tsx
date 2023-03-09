@@ -23,6 +23,7 @@ const CardComponent: React.FC<Props> = ({ IconArea, value }) => {
           marginRight: 1,
           alignItems: 'center',
           justifyContent: 'center',
+
         }}
       >
         {IconArea}

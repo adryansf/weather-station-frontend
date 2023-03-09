@@ -6,7 +6,7 @@ import {
   Opacity as OpacityIcon,
   Thermostat as ThermostatIcon,
   TireRepair as PressureIcon,
-  Today as TodayIcon,
+  Today as TodayIcon
 } from '@mui/icons-material';
 import {
   Box,
@@ -17,14 +17,14 @@ import {
   Pagination,
   Skeleton,
   Typography,
-  useTheme,
+  useTheme
 } from '@mui/material';
 import {
   addDays,
   format,
   formatDistanceToNow,
   isFuture,
-  subDays,
+  subDays
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import React, { useContext, useState } from 'react';
@@ -112,10 +112,10 @@ const Dashboard: React.FC = () => {
                 onClick={() => setDate(subDays(date, 1))}
                 sx={{ marginX: 2 }}
               >
-                <ArrowLeftIcon fontSize="large" />
+                <ArrowLeftIcon fontSize="medium" />
               </IconButton>
 
-              <Typography component="p" variant="h6">
+              <Typography component="p" variant="h6" sx={{fontSize: {xs: 10, md: 25}, textAlign: 'center'}}> 
                 {format(date, 'PPPP', { locale: ptBR })}
               </Typography>
               <IconButton
@@ -124,13 +124,13 @@ const Dashboard: React.FC = () => {
                   if (!isFuture(addDays(date, 1))) setDate(addDays(date, 1));
                 }}
               >
-                <ArrowRightIcon fontSize="large" />
+                <ArrowRightIcon fontSize="medium" />
               </IconButton>
               <IconButton
                 onClick={() => setDate(new Date())}
                 sx={{ marginX: 2 }}
               >
-                <TodayIcon fontSize="large" />
+                <TodayIcon fontSize="medium" />
               </IconButton>
             </Grid>
 
@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <ThermostatIcon color="secondary" sx={{ fontSize: 100 }} />
+                    <ThermostatIcon color="secondary" sx={{ fontSize: {xs: 50, md: 100} }} />
                     <Typography variant="overline" textAlign="center">
                       Temperatura
                     </Typography>
@@ -154,7 +154,7 @@ const Dashboard: React.FC = () => {
                 }
                 value={
                   <Box display="flex">
-                    <Typography color="secondary" variant="h3">
+                    <Typography color="secondary" variant="h4">
                       {Number(dayData.temperature).toFixed(2)}
                     </Typography>
                     <Typography color="secondary" variant="h6">
@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
                     }}
                   >
                     <OpacityIcon
-                      sx={{ fontSize: 100, color: theme.palette.primary.light }}
+                      sx={{ fontSize: {xs: 50, md: 100} }}
                     />
                     <Typography variant="overline" textAlign="center">
                       Umidade
@@ -188,7 +188,7 @@ const Dashboard: React.FC = () => {
                 }
                 value={
                   <Box display="flex">
-                    <Typography color="primary.light" variant="h3">
+                    <Typography color="primary.light" variant="h4">
                       {Number(dayData.humidity).toFixed(2)}
                     </Typography>
                     <Typography color="primary.light" variant="h6">
@@ -212,7 +212,7 @@ const Dashboard: React.FC = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <PressureIcon color="warning" sx={{ fontSize: 100 }} />{' '}
+                    <PressureIcon color="warning" sx={{ fontSize: {xs: 50, md: 100} }} />{' '}
                     <Typography variant="overline" textAlign="center">
                       Pressão
                     </Typography>
@@ -220,7 +220,7 @@ const Dashboard: React.FC = () => {
                 }
                 value={
                   <Box display="flex">
-                    <Typography color={theme.palette.warning.main} variant="h3">
+                    <Typography color={theme.palette.warning.main} variant="h4">
                       {Number(dayData.pressure).toFixed(2)}
                     </Typography>
                     <Typography color={theme.palette.warning.main} variant="h6">
@@ -244,7 +244,7 @@ const Dashboard: React.FC = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <CloudIcon color="primary" sx={{ fontSize: 100 }} />
+                    <CloudIcon color="primary" sx={{ fontSize: {xs: 50, md: 100} }} />
                     <Typography variant="overline" textAlign="center">
                       Chuva
                     </Typography>
@@ -252,7 +252,7 @@ const Dashboard: React.FC = () => {
                 }
                 value={
                   <Box display="flex">
-                    <Typography color="primary" variant="h3">
+                    <Typography color="primary" variant="h4">
                       {Number(dayData.rain).toFixed(2)}
                     </Typography>
                     <Typography color="primary" variant="h6">
@@ -275,7 +275,7 @@ const Dashboard: React.FC = () => {
                     }}
                   >
                     <AirIcon
-                      sx={{ fontSize: 100, color: theme.palette.success.light }}
+                      sx={{ fontSize: {xs: 50, md: 100,}, color: theme.palette.success.light }}
                     />
                     <Typography variant="overline" textAlign="center">
                       Velocidade do Vento
@@ -286,7 +286,8 @@ const Dashboard: React.FC = () => {
                   <Box display="flex">
                     <Typography
                       color={theme.palette.success.light}
-                      variant="h3"
+                      variant="h4"
+                     
                     >
                       {Number(dayData.windVelocity).toFixed(2)}
                     </Typography>

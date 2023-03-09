@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
   {
     field: 'createdAt',
     headerName: 'Data do Registro',
-    width: 150,
+    minWidth: 420,
     flex: 1,
     valueGetter: params =>
       format(new Date(params.value), 'PPPPpppp', { locale: ptBR }),
