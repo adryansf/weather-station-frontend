@@ -257,7 +257,7 @@ const Dashboard: React.FC = () => {
                     </Typography>
                     <Typography color="primary" variant="h6">
                       {' '}
-                      mm²
+                      mm
                     </Typography>
                   </Box>
                 }
